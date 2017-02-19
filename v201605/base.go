@@ -229,7 +229,7 @@ func (a *Auth) request(serviceUrl ServiceUrl, action string, body interface{}) (
 
 	soapResp := struct {
 		XMLName xml.Name       `xml:"http://schemas.xmlsoap.org/soap/envelope/ Envelope"`
-		Header  soapRespHeader `xml:"Header>RequestHeader"`
+		Header  soapRespHeader `xml:"Header>ResponseHeader"`
 		Body    soapRespBody   `xml:"http://schemas.xmlsoap.org/soap/envelope/ Body"`
 	}{}
 
