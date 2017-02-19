@@ -77,6 +77,14 @@ func (s *ReportDownloadService) AWQL(awql string, fmt string) (res interface{}, 
 	return parseReport(resp.Body)
 }
 
+// Download as a stream.
+func (s *ReportDownloadService) AWQLStream(awql, fmt string) (res *http.Response, err error) {
+	form := url.Values{}
+	form.Add("__rdquery", awql)
+	form.Add("__fmt", fmt)
+	return s.makeRequest(form)
+}
+
 // Make our http request using the given form (re-usable for either XML or AWQL)
 func (s *ReportDownloadService) makeRequest(form url.Values) (res *http.Response, err error) {
 	req, err := http.NewRequest("POST", reportDownloadServiceUrl.Url, bytes.NewBufferString(form.Encode()))
