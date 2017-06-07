@@ -98,13 +98,13 @@ func (s *BatchJobHelper) UploadBatchJobOperations(jobOperations []interface{}, u
 		req.Header.Set("x-goog-resumable", "start")
 
 		response, err := client.Do(req)
-
 		if err != nil {
 			return err
 		}
+		defer response.Body.Close()
 
 		// If we got a valid upload url it will be 201
-		if response.StatusCode != 201 {
+		if response.StatusCode != http.StatusCreated {
 			respBody, err := ioutil.ReadAll(response.Body)
 
 			if err != nil {
@@ -134,10 +134,10 @@ func (s *BatchJobHelper) UploadBatchJobOperations(jobOperations []interface{}, u
 		req.Header.Set("Content-Range", fmt.Sprintf("bytes 0-%v/%v", bodyLength-1, bodyLength))
 
 		resp, err := client.Do(req)
-
 		if err != nil {
 			return err
 		}
+		defer resp.Body.Close()
 
 		respBody, err := ioutil.ReadAll(resp.Body)
 
@@ -151,7 +151,7 @@ func (s *BatchJobHelper) UploadBatchJobOperations(jobOperations []interface{}, u
 		}
 
 		// resp seems to only return 200's and there is no error handling, but if we happen to get invalid status lets try to do something with it
-		if resp.StatusCode != 200 {
+		if resp.StatusCode != http.StatusOK {
 			return errors.New("Non-200 response returned Body: " + string(respBody))
 		}
 	}
